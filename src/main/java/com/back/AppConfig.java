@@ -1,11 +1,17 @@
 package com.back;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 public class AppConfig {
+    @Autowired
+    @Lazy
+    private AppConfig self;
+
     @Bean
     int version() {
         return 55;
@@ -14,8 +20,8 @@ public class AppConfig {
     @Bean
     ApplicationRunner myApplicationRunner() {
         return args -> {
-            work1();
-            work2();
+            self.work1();
+            self.work2();
         };
     }
 
