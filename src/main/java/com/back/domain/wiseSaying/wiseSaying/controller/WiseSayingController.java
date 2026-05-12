@@ -3,19 +3,23 @@ package com.back.domain.wiseSaying.wiseSaying.controller;
 import com.back.domain.wiseSaying.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.wiseSaying.service.WiseSayingService;
 import lombok.RequiredArgsConstructor;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 public class WiseSayingController {
     private final WiseSayingService wiseSayingService;
+    private final HtmlRenderer htmlRenderer;
+    private final Parser parser;
 
     @GetMapping("/wiseSayings/write")
     @ResponseBody
@@ -54,11 +58,18 @@ public class WiseSayingController {
     public String detail(@PathVariable int id) {
         WiseSaying wiseSaying = wiseSayingService.findById(id).get();
 
+
+        // 문자열을 파싱해서 Node 트리 구조로 변환
+        Node document = parser.parse(wiseSaying.getContent());
+
+        // Node를 HTML 문자열로 렌더링
+        String html = htmlRenderer.render(document);
+
         return """
-                <h1>명언 : %s</h1>
                 <div>번호 : %d</div>
                 <div>작가 : %s</div>
-                """.formatted(wiseSaying.getContent(), wiseSaying.getId(), wiseSaying.getAuthor());
+                <div>%s</div>
+                """.formatted(wiseSaying.getId(), wiseSaying.getAuthor(), html);
     }
 
     @GetMapping("/wiseSayings/{id}/delete")
