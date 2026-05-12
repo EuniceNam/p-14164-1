@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class HomeController {
     private final PersonService personService;
 
+
     @GetMapping("/")
     @ResponseBody
     public String main() {
