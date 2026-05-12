@@ -1,14 +1,19 @@
 package com.back.domain.wiseSaying.wiseSaying.entity;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Id;
 
-@AllArgsConstructor
+import static jakarta.persistence.GenerationType.IDENTITY;
+
+@Entity
 @Getter
+@NoArgsConstructor
 public class WiseSaying {
-    @Setter
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private int id;
     private String content;
     private String author;
@@ -21,9 +26,5 @@ public class WiseSaying {
     public void modify(String content, String author) {
         this.content = content;
         this.author = author;
-    }
-
-    public boolean isNew() {
-        return id == 0;
     }
 }
